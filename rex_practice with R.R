@@ -28,7 +28,6 @@ leveneTest(SBP~as.factor(Group),data = sbp, center=mean) #rex에선 center가 me
 library(stats)
 t.test(SBP~Group, data=sbp, var.equal=TRUE) #When homogeneity of variance between groups is assumed.
 t.test(SBP~Group, data=sbp) #When heterogeneity of variance between groups is assumed.
-
 -----------------------------------------------------------------------------------------------------------
 #2 memory
   
@@ -61,7 +60,6 @@ library(stats)
 t.test(단기간기억력~그룹, data=memory, var.equal=TRUE) #When homogeneity of variance between groups is assumed.
 t.test(단기간기억력~그룹, data=memory) #When heterogeneity of variance between groups is assumed.
 -----------------------------------------------------------------------------------------------------------
-
 #3 radiation
 
 ##데이터 memory 불러오기
@@ -81,7 +79,6 @@ qqline(difference)
 library(stats)
 t.test(before_h,after_h,paired = TRUE)
 -----------------------------------------------------------------------------------------------------------
-
 #4 ammonia
 
 ##데이터 ammonia 불러오기
@@ -101,7 +98,6 @@ qqline(difference)
 library(stats)
 t.test(복용전,복용후,paired = TRUE)
 -----------------------------------------------------------------------------------------------------------
-
 #5 Osteoporosis
 
 ##데이터 Osteoporosis 불러오기
@@ -143,7 +139,6 @@ tamhaneT2Test(Osteoporosis~as.factor(Group), data = Osteo) #*modified for Rex*
 
 boxplot(Osteoporosis~Group, data = Osteo)
 -----------------------------------------------------------------------------------------------------------
-
 #6 vitamin
 
 ##데이터 vitamin 불러오기
@@ -186,7 +181,6 @@ tamhaneT2Test(Vitamin_D~as.factor(Group), data = vitamin) #*modified for Rex*
 
 boxplot(Vitamin_D~Group, data = vitamin)
 -----------------------------------------------------------------------------------------------------------
-
 #9 vaccine
 
 ##데이터 vaccine 불러오기
@@ -202,7 +196,6 @@ library(stats)
 prop.test(x=c(37,27),n=c(50,50),correct = FALSE) #Homogeneity of variance is assumed
 prop.test(x=c(37,27),n=c(50,50),correct = TRUE)
 -----------------------------------------------------------------------------------------------------------
-
 #11 memory
 
 ##데이터 memory 불러오기
@@ -228,7 +221,6 @@ qqline(group2$단기간기억력)
 library(stats)
 var.test(group1$단기간기억력, group2$단기간기억력)
 -----------------------------------------------------------------------------------------------------------
-
 #12 sbp
 
 ##데이터 sbp 불러오기
@@ -254,7 +246,6 @@ qqline(group2$SBP)
 library(car)
 leveneTest(SBP~as.factor(Group),data = sbp, center=mean) #defalut:center=median
 -----------------------------------------------------------------------------------------------------------
-
 #13 chweight
 
 ##데이터 chweight 불러오기
@@ -279,7 +270,6 @@ install.packages("moments")
 library(moments)
 bonett.test(chweight$몸무게)
 -----------------------------------------------------------------------------------------------------------
-
 #15 height
 
 ##데이터 height 불러오기
@@ -321,7 +311,6 @@ RSS(lm0)
 ##Graphs for Regression Diagnostics
 plot(lm1)
 -----------------------------------------------------------------------------------------------------------
-
 #16 bwt
 
 ##데이터 bwt 불러오기
@@ -378,7 +367,6 @@ plot(lm1)
 lm5<-lm(bwt~age+lwt+smoke+smoke:age+smoke:lwt, data=bwt) #모형 적합
 summary(lm5)
 -----------------------------------------------------------------------------------------------------------
-
 #17 CH
 
 ##데이터 bwt 불러오기
@@ -405,7 +393,6 @@ corrplot(as.matrix(cor))
 
 pairs(~CH$총콜레스테롤+CH$관상동맥, data=CH)
 -----------------------------------------------------------------------------------------------------------
-
 #18 ozone
 
 ##데이터 bwt 불러오기
@@ -432,7 +419,6 @@ corrplot(as.matrix(cor))
 
 pairs(~ozone$Ozone+ozone$Solar.R+ozone$Temp)
 -----------------------------------------------------------------------------------------------------------
-
 #19 heart
 
 ##데이터 heart불러오기
@@ -452,7 +438,6 @@ install.packages("ppcor")
 library(ppcor)
 pcor.test(heart$심근경색,heart$혈압,heart$나이, method="spearman") #z is a controlling variable
 -----------------------------------------------------------------------------------------------------------
-
 #20 anemia
 
 ##데이터 anemia불러오기
@@ -472,7 +457,6 @@ install.packages("ppcor")
 library(ppcor)
 pcor.test(anemia$HE_Folate,anemia$HE_HB,anemia$age,method="pearson") #z is a controlling variable
 -----------------------------------------------------------------------------------------------------------
-
 #21 exercise
 
 ##데이터 exercise 불러오기
@@ -508,7 +492,6 @@ RelRisk(t(con)[,c(2,1)], conf.level=0.95) #스트레칭(0) RR Col(2)
 ##mosaicplot
 mosaicplot(con)
 -----------------------------------------------------------------------------------------------------------
-
 #22 infection
 
 ##데이터 infection 불러오기
@@ -554,7 +537,6 @@ OddsRatio(con3, conf.level=0.95) #race(3. Asian) OR
 RelRisk(con3, conf.level=0.95) #race(3. Asian) RR Col(1)
 RelRisk(con3[,c(2,1)], conf.level=0.95) #race(3. Asian) RR Col(2)
 -----------------------------------------------------------------------------------------------------------
-
 #23 smoke
 
 ##데이터 smoke 불러오기
@@ -594,7 +576,6 @@ RelRisk(t(con)[,c(2,1)], conf.level=0.95) #스트레칭(0) RR Col(2)
 ##mosaicplot
 mosaicplot(con)
 -----------------------------------------------------------------------------------------------------------
-
 #24
 
 ##contingency table
@@ -616,7 +597,6 @@ library(stats)
 mcnemar.test(con, correct = FALSE) #Without Continuity Correction
 mcnemar.test(con) #With Continuity Correction
 -----------------------------------------------------------------------------------------------------------
-
 #25 cardiovascular
 
 ##데이터 cardiovascular 불러오기
@@ -650,7 +630,6 @@ BreslowDayTest(con,correct = TRUE)
 library(vcd)
 oddsratio(con,log = FALSE)
 -----------------------------------------------------------------------------------------------------------
-
 #26 BP
 
 ##데이터 BP 불러오기
@@ -683,7 +662,6 @@ BreslowDayTest(con,correct = TRUE)
 library(vcd)
 oddsratio(con,log = FALSE)
 -----------------------------------------------------------------------------------------------------------
-
 #27 glu
 
 ##데이터 glu 불러오기
@@ -702,7 +680,6 @@ wilcox.test(glu$glucose, mu=80, alternative = "two.sided", exact=TRUE)
 
 install.packages("exactRankTests")
 -----------------------------------------------------------------------------------------------------------
-
 #28 BMI
 
 ##데이터 BMI 불러오기
@@ -715,7 +692,6 @@ install.packages("BSDA")
 library(BSDA)
 SIGN.test(bmi$BMI, md=24, alternative = "two.sided")
 -----------------------------------------------------------------------------------------------------------
-
 #29 bacteroides
 
 ##데이터 bacteroides 불러오기
@@ -735,7 +711,6 @@ wilcox.exact(bacte$Bacteroides~bacte$Group)
 library(exactRankTests)
 wilcox.exact(glu$glucose, mu=80, alternative = "two.sided")
 -----------------------------------------------------------------------------------------------------------
-
 #30 Rhino
 
 ##데이터 Rhino 불러오기
@@ -749,7 +724,6 @@ library(stats)
 wilcox.test(rhino$Rhino~rhino$Group,exact=TRUE)
 wilcox.exact(rhino$Rhino~rhino$Group)
 -----------------------------------------------------------------------------------------------------------
-
 #31 chol
 
 ##데이터 chol 불러오기
@@ -765,7 +739,6 @@ install.packages("exactRankTests")
 library(exactRankTests)
 wilcox.exact(chol$Chol~chol$Group)
 -----------------------------------------------------------------------------------------------------------
-
 #33 hyperlipi
 
 ##데이터 hyperlipi 불러오기
@@ -784,7 +757,6 @@ SIGN.test(hyperlipi$before, hyperlipi$after, alternative = "greater", paired = T
 wilcox.test(hyperlipi$before, hyperlipi$after, alternative = "greater", paired = TRUE)
 wilcox.exact(hyperlipi$before, hyperlipi$after, alternative = "greater", paired = TRUE)
 -----------------------------------------------------------------------------------------------------------
-
 #35 NH3
 
 ##데이터 NH3 불러오기
@@ -801,7 +773,6 @@ install.packages("PMCMRplus")
 library(PMCMRplus)
 kwAllPairsDunnTest(암모니아~그룹, NH3, p.adjust.method= "bonferroni")
 -----------------------------------------------------------------------------------------------------------
-
 #36 depression
 
 ##데이터 depression 불러오기
@@ -821,7 +792,6 @@ install.packages("DescTools")
 library(DescTools)
 JonckheereTerpstraTest(depress$우울점수,depress$그룹, alternative = "decreasing")
 -----------------------------------------------------------------------------------------------------------
-
 #37 selfesteem
 
 ##데이터 selfesteem 불러오기
@@ -856,7 +826,6 @@ library(PMCMRplus)
 ad<-frdAllPairsConoverTest(y=self$selfesteem, groups=self$group, blocks=self$id, p.adjust="bonferroni")
 summary(ad)
 -----------------------------------------------------------------------------------------------------------
-
 #38 happiness
 
 ##데이터 happiness 불러오기
