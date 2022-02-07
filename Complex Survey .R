@@ -111,7 +111,7 @@ g1
 
 #model fitness and ANOVA table : regTermTest
 regTermTest(g1, ~age_g)
-anova(g1) #NULL:요인한개일때 null 왜지..?
+anova(g1) #NULL:요인한개일때 null
 AIC(g1)
 deviance(g1)
 
