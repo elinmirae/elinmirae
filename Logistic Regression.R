@@ -116,7 +116,7 @@ library(MASS)
 head(exam7)
 polr1<-polr(as.factor(SURVIVAL)~REGION+TOXICLEV, data=exam7, method = "logistic")
 str(exam7$SURVIVAL)
-summary(polr1) #polr랑 vglm 값이 왜 다를까아아아........... fit이 다름??
+summary(polr1) #polr랑 vglm 결과 
 
 
 #Hosmer-Lemeshow test
@@ -206,6 +206,6 @@ exam9_column=apply(exam9,1,mean)
 exam9<-exam9[exam9_column!=0,]
 
 #retry
-vglm4<-vglm(Disc~Sex+AGE+BMI, family = cumulative(link = "logitlink"), data = exam9) #왜 에러가 나지
+vglm4<-vglm(Disc~Sex+AGE+BMI, family = cumulative(link = "logitlink"), data = exam9) #error
 
 levels(exam9$Disc)
