@@ -1,4 +1,4 @@
-#º¹ÇÕÇ¥º»¼³°è_±¹¹Î°Ç°­¿µ¾çÁ¶»ç
+#ë³µí•©í‘œë³¸ì„¤ê³„_êµ­ë¯¼ê±´ê°•ì˜ì–‘ì¡°ì‚¬
 
 install.packages("haven", dependencies = TRUE)
 
@@ -7,7 +7,7 @@ library(haven)
 ?read_sas
 
 DB <- read_spss("HN18_ALL.sav")
-DB22 <- read_spss("Á¦¸ñ¾øÀ½2.sav")
+DB22 <- read_spss("ì œëª©ì—†ìŒ2.sav")
 
 head(DB)
 View(DB)
@@ -22,7 +22,7 @@ lbls<-paste(names(sextable),":",sextable)
 pie(sextable,labels = lbls)
 hist(DB$age,xlab = "age")
 
-#Èí¿¬·®°ú Æó±â´É°Ë»ç
+#í¡ì—°ëŸ‰ê³¼ íê¸°ëŠ¥ê²€ì‚¬
 red<-DB%>%select(BS3_2,HE_fev1fvc,sex,age,HE_BMI,HE_COPD)
 head(red)
 dim(red)
@@ -34,7 +34,7 @@ cor.test(red2$BS3_2,red2$HE_fev1fvc,method = "pearson") #correlation test
 temp_red2<-red2[,Bin_group:=cut(-lnf,5,10,15,20,25,30,lnf),paste0(1:7)]
 boxplot(temp_red2$HE_fev1fvc~temp_red2$Bin_group)  #cancel
 
-#NA°ª Æ÷ÇÔ½Ã °è»êÁøÇà ¾ÈµÊ 
+#NAê°’ í¬í•¨ì‹œ ê³„ì‚°ì§„í–‰ ì•ˆë¨ 
 mean(DB$HE_sbp)
 dim(DB)
 na.omit(DB)
@@ -44,7 +44,7 @@ head(DB2)
 mean(DB2$id2)
 DB2$id2<-ifelse(DB2$id==2,NA,DB2$id)
 
-#±â¼úÅë°è·®1-¼ºº°¿¡ µû¸¥ ¼öÃà±â Ç÷¾Ğ Æò±Õ 
+#ê¸°ìˆ í†µê³„ëŸ‰1-ì„±ë³„ì— ë”°ë¥¸ ìˆ˜ì¶•ê¸° í˜ˆì•• í‰ê·  
 hist(DB$HE_sbp)
 DB%>%ggplot(aes(HE_sbp))+geom_histogram()+facet_wrap(~factor(sex))
 DB%>%ggplot(aes(group=sex,y=HE_sbp))+geom_boxplot()
@@ -53,16 +53,16 @@ DB%>%
   summarize(mean = mean(HE_sbp,na.rm = T))
 var.test(HE_sbp~sex, data=DB)
 
-#º¹ÇÕÇ¥º»¼³°è
+#ë³µí•©í‘œë³¸ì„¤ê³„
 install.packages("survey")
 library(survey)            
 
 table(is.na(DB$wt_itvex))
 DB<-subset(DB,!is.na(wt_itvex))
 
-#º¹ÇÕÇ¥º»¼³°è
+#ë³µí•©í‘œë³¸ì„¤ê³„
 DB_18<-svydesign(id=~psu, strata=~kstrata, weights=~wt_itvex, data=DB)
-#º¹¿øÃßÃâ-°¡ÁßÄ¡ Àû¿ë
+#ë³µì›ì¶”ì¶œ-ê°€ì¤‘ì¹˜ ì ìš©
 DB_181<-as.svrepdesign(DB_18, type="BRR") #error
 
 #two sample ttest
@@ -74,14 +74,14 @@ svyttest(HE_sbp~sex,DB_18)
 SBP1<-subset(DB_18,sex==1)
 SBP2<-subset(DB_18,sex==2)
 g1<-svyhist(~HE_sbp,SBP1,main="SBP in case of male")
-g2<-svyhist(~HE_sbp,SBP2,main="SBP in case of female") #³²ÀÚ¿©ÀÚ ¾î¶»°Ô ÇÑ²¨¹ø¿¡ Ãâ·Â?
+g2<-svyhist(~HE_sbp,SBP2,main="SBP in case of female") #ë‚¨ìì—¬ì ì–´ë–»ê²Œ í•œêº¼ë²ˆì— ì¶œë ¥?
 
 svyboxplot(HE_sbp~sex,DB_18)
 g11<-svyboxplot(HE_sbp~sex,SBP1,main="SBP in case of male")
 g22<-svyboxplot(HE_sbp~sex,SBP2,main="SBP in case of female")
 
-#svyttest-°íÇ÷¾ĞÀ¯º´¿©ºÎ¿¡ µû¸¥ bmi
-#HE_HP:°íÇ÷¾ĞÀ¯º´¿©ºÎ, 1~3
+#svyttest-ê³ í˜ˆì••ìœ ë³‘ì—¬ë¶€ì— ë”°ë¥¸ bmi
+#HE_HP:ê³ í˜ˆì••ìœ ë³‘ì—¬ë¶€, 1~3
 DB$HP<-ifelse(DB$HE_HP==1|DB$HE_HP==2,0,1)
 table(DB$HP)
 table(DB$HE_HP)
@@ -91,10 +91,10 @@ svyttest(HE_BMI~HP,DB_18)
 
 #one sample ttest
 svymean(~HE_sbp,DB_18,na.rm = T)
-svyttest(HE_sbp~0,mu=120,DB_18,na.rm=T) #mu¼³Á¤ ¾ÈµÊ
+svyttest(HE_sbp~0,mu=120,DB_18,na.rm=T) #muì„¤ì • ì•ˆë¨
 
 #paired sample ttest
-#¿¬·É±×·ì¿¡ µû¸¥ ¼öÃà±âÇ÷¾Ğ Æò±Õºñ±³
+#ì—°ë ¹ê·¸ë£¹ì— ë”°ë¥¸ ìˆ˜ì¶•ê¸°í˜ˆì•• í‰ê· ë¹„êµ
 DB$age_g<- ifelse(DB$age>=70,7,
                   ifelse(DB$age>=60,6,
                          ifelse(DB$age>=50,5,
@@ -111,7 +111,7 @@ g1
 
 #model fitness and ANOVA table : regTermTest
 regTermTest(g1, ~age_g)
-anova(g1) #NULL:¿äÀÎÇÑ°³ÀÏ¶§ null ¿ÖÁö..?
+anova(g1) #NULL:ìš”ì¸í•œê°œì¼ë•Œ null ì™œì§€..?
 AIC(g1)
 deviance(g1)
 
@@ -127,8 +127,8 @@ pairwise.table()
 attach(DB_18)
 pairwise.t.test(HE_sbp)
 
-#linear regression : ¿¬·É´ë¿Í BMI¿¡ µû¸¥ ¼öÃà±â Ç÷¾Ğ
-g2<-svyglm(HE_sbp~HE_BMI+factor(age_g),DB_18) #´ÙÁßÈ¸±ÍºĞ¼®
+#linear regression : ì—°ë ¹ëŒ€ì™€ BMIì— ë”°ë¥¸ ìˆ˜ì¶•ê¸° í˜ˆì••
+g2<-svyglm(HE_sbp~HE_BMI+factor(age_g),DB_18) #ë‹¤ì¤‘íšŒê·€ë¶„ì„
 summary(g2)
 anova(g2)
 aov(g2)
