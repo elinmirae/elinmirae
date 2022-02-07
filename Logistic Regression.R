@@ -3,27 +3,27 @@ getwd()
 install.packages("haven")
 library(haven)
 
-#ÀÌºĞÇü ·ÎÁö½ºÆ½ È¸±ÍºĞ¼®
-#°ü»óµ¿¸Æ
+#ì´ë¶„í˜• ë¡œì§€ìŠ¤í‹± íšŒê·€ë¶„ì„
+#ê´€ìƒë™ë§¥
 View(exam)
 head(exam)
-exam<-read_spss("°ü»óµ¿¸ÆÀÇ ½ÉÀåº´ ÀÚ·á(chd).sav")
+exam<-read_spss("ê´€ìƒë™ë§¥ì˜ ì‹¬ì¥ë³‘ ìë£Œ(chd).sav")
 g1<-glm(CHD~AGE,family = binomial,data=exam)
 summary(g1)
 confint(g1)
 
-#Ãâ»ı¾Æ
-exam2<-read_spss("ÀúÃ¼Áß¾Æ ÀÚ·á(lowbwtm).sav")
+#ì¶œìƒì•„
+exam2<-read_spss("ì €ì²´ì¤‘ì•„ ìë£Œ(lowbwtm).sav")
 exam2$LWD<-ifelse(exam2$LWT<110,1,0)
 
 install.packages("writexl")
 library(writexl)
 getwd()
-write_xlsx(exam2,path="ÀúÃ¼Áß¾Æ ÀÚ·á.xlsx")
+write_xlsx(exam2,path="ì €ì²´ì¤‘ì•„ ìë£Œ.xlsx")
 
 #binary data
 setwd("D:/mirae/logistic")
-exam3<-read_spss("ºê¶ó¿îÀÇ Àü¸³¼±¾Ï ÀÚ·á(binary).sav")
+exam3<-read_spss("ë¸Œë¼ìš´ì˜ ì „ë¦½ì„ ì•” ìë£Œ(binary).sav")
 g3<-glm(NODES~XRAY+STAGE+GRADE+AGE+ACID, family = binomial(), data=exam3)
 deviance(g3)
 head(exam3)
@@ -58,20 +58,20 @@ Anova(step_g333, type = "III")
 
 
 #ME data
-exam4<-read_spss("À¯¹æ ·ÛÆ®°Õ¼± Á¶¿µ°Ë»ç ÀÚ·á(meexp).sav")
+exam4<-read_spss("ìœ ë°© ë¢´íŠ¸ê²ì„  ì¡°ì˜ê²€ì‚¬ ìë£Œ(meexp).sav")
 head(exam4)
 exam4$ME<-relevel(exam4$ME,ref="0") #error
 
 install.packages("VGAM")
 library(VGAM)
-vglm1<-vglm(ME~HIST,family = multinomial(refLevel = 1) ,data=exam4) #refLevel ÁöÁ¤½Ã ¹üÁÖÀÇ ¼ø¼­(¾çÀÇ Á¤¼ö)¸¦ ÀÔ·ÂÇØ¾ßÇÔ. 
+vglm1<-vglm(ME~HIST,family = multinomial(refLevel = 1) ,data=exam4) #refLevel ì§€ì •ì‹œ ë²”ì£¼ì˜ ìˆœì„œ(ì–‘ì˜ ì •ìˆ˜)ë¥¼ ì…ë ¥í•´ì•¼í•¨. 
 summary(vglm1)
 coefficients(vglm1)
 AIC(vglm1)
 AICc(vglm1)
 BIC(vglm1)
 deviance(vglm1)
-chisq.test(exam4$HIST,exam4$ME,correct = T) #¹¹Â¡
+chisq.test(exam4$HIST,exam4$ME,correct = T) #ë­ì§•
 
 #Estimates-intercept
 setwd("D:/mirae/logistic")
@@ -86,18 +86,18 @@ Anova(vglm2,type = "III")
 getwd()
 
 #reserch 1
-exam6<-read_spss("»ç·Ê¿¬±¸1.sav")
+exam6<-read_spss("ì‚¬ë¡€ì—°êµ¬1.sav")
 head(exam6)
 glm(RESTINGP~SMOKES+WEIGHT,family = "binomial",data=exam6)
 
-#´ÙÇ×ÀÚ·á È¸±ÍºĞ¼® (Á¾¼Óº¯¼ö-¼ø¼­Çü)
+#ë‹¤í•­ìë£Œ íšŒê·€ë¶„ì„ (ì¢…ì†ë³€ìˆ˜-ìˆœì„œí˜•)
 ##ordinal logistic regression
 getwd()
 
 library(haven)
-exam7<-read_spss("»ç·Ê¿¬±¸4.sav")
+exam7<-read_spss("ì‚¬ë¡€ì—°êµ¬4.sav")
 
-##vglmÀÌ¿ë
+##vglmì´ìš©
 library(VGAM)
 head(exam7)
 exam7$SURVIVAL<-factor(exam7$SURVIVAL,ordered = TRUE)
@@ -110,18 +110,18 @@ table(exam7$SURVIVAL)
 coef(vglm3)
 AIC(vglm3)
 
-##polrÀÌ¿ë
+##polrì´ìš©
 install.packages("MASS")
 library(MASS)
 head(exam7)
 polr1<-polr(as.factor(SURVIVAL)~REGION+TOXICLEV, data=exam7, method = "logistic")
 str(exam7$SURVIVAL)
-summary(polr1) #polr¶û vglm °ªÀÌ ¿Ö ´Ù¸¦±î¾Æ¾Æ¾Æ........... fitÀÌ ´Ù¸§??
+summary(polr1) #polrë‘ vglm ê°’ì´ ì™œ ë‹¤ë¥¼ê¹Œì•„ì•„ì•„........... fitì´ ë‹¤ë¦„??
 
 
 #Hosmer-Lemeshow test
 getwd()
-exam8<-read_spss("°ü»óµ¿¸ÆÀÇ ½ÉÀåº´ ÀÚ·á(chd).sav")
+exam8<-read_spss("ê´€ìƒë™ë§¥ì˜ ì‹¬ì¥ë³‘ ìë£Œ(chd).sav")
 glm<-glm(CHD~AGE,family = binomial ,data = exam8)
 ?glm
 
@@ -160,21 +160,21 @@ my_AIC
 
 
 #variable selection - forward
-exam3<-read_spss("ºê¶ó¿îÀÇ Àü¸³¼±¾Ï ÀÚ·á(binary).sav")
+exam3<-read_spss("ë¸Œë¼ìš´ì˜ ì „ë¦½ì„ ì•” ìë£Œ(binary).sav")
 head(exam3)
 setwd("D:/mirae/logistic")
 
 nothing<-glm(NODES~1, family=binomial(), data=exam3)
 step(nothing, scope=list(lower=~1, upper=~XRAY+STAGE+GRADE+AGE+ACID), direction = "forward")
 
-#´ÙÇ×ÀÚ·á È¸±ÍºĞ¼® (Á¾¼Óº¯¼ö-¼ø¼­Çü)
+#ë‹¤í•­ìë£Œ íšŒê·€ë¶„ì„ (ì¢…ì†ë³€ìˆ˜-ìˆœì„œí˜•)
 ##ordinal logistic regression
 getwd()
 
 library(haven)
-exam7<-read_spss("»ç·Ê¿¬±¸4.sav")
+exam7<-read_spss("ì‚¬ë¡€ì—°êµ¬4.sav")
 
-##vglmÀÌ¿ë
+##vglmì´ìš©
 library(VGAM)
 head(exam7)
 vglm3<-vglm(SURVIVAL~REGION+TOXICLEV, family= multinomial(refLevel = 1), data=exam7)
@@ -184,28 +184,28 @@ getwd()
 
 #ordered multinomial logistic regression 
 library(readxl)
-exam9<-read_excel("È¸±ÍºĞ¼®_´ÙÇ×ÀÚ·áÈ¸±ÍºĞ¼®(Disc).xlsx")
+exam9<-read_excel("íšŒê·€ë¶„ì„_ë‹¤í•­ìë£ŒíšŒê·€ë¶„ì„(Disc).xlsx")
 head(exam9)
 exam9$Disc<-factor(exam9$Disc,ordered = TRUE)
 
 str(exam9$Disc)
 vglm4<-vglm(Disc~Sex+AGE+BMI, family = cumulative(link = "logitlink"), data = exam9)
 
-#NA È®ÀÎ
+#NA í™•ì¸
 View(apply(exam9,1,is.na))
-#NAN È®ÀÎ
+#NAN í™•ì¸
 View(apply(exam9,1,is.nan)) 
-#inf È®ÀÎ
+#inf í™•ì¸
 View(apply(exam9,1,is.infinite))
 
-#row 0 Á¦°Å
+#row 0 ì œê±°
 exam9_row=apply(exam9,1,mean)
 exam9<-exam9[exam9_row!=0,]
-#column 0 Á¦°Å
+#column 0 ì œê±°
 exam9_column=apply(exam9,1,mean)
 exam9<-exam9[exam9_column!=0,]
 
 #retry
-vglm4<-vglm(Disc~Sex+AGE+BMI, family = cumulative(link = "logitlink"), data = exam9) #¿Ö ¿¡·¯°¡ ³ªÁö
+vglm4<-vglm(Disc~Sex+AGE+BMI, family = cumulative(link = "logitlink"), data = exam9) #ì™œ ì—ëŸ¬ê°€ ë‚˜ì§€
 
 levels(exam9$Disc)
