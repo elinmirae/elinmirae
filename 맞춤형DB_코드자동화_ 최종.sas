@@ -1,33 +1,34 @@
-LIBNAME REX_jk "D:\ǥ����ȣƮDB\01.jk"; RUN; /*�ڰ� DB*/
+LIBNAME REX_jk "D:\표본코호트DB\01.jk"; RUN; /*자격 DB*/
 
-LIBNAME REX_T120 "D:\ǥ����ȣƮDB\02.T120"; RUN; /*����DB(�ǰ�_���Ǳ��) - ������(20t)*/
+LIBNAME REX_T120 "D:\표본코호트DB\02.T120"; RUN; /*진료DB(의과_보건기관) - 명세서(20t)*/
 
-LIBNAME REX_T130 "D:\ǥ����ȣƮDB\03.���᳻��_T130_S"; RUN; /*����DB(�ǰ�_���Ǳ��) - ���᳻��(30t)*/
+LIBNAME REX_T130 "D:\표본코호트DB\03.진료내역_T130_S"; RUN; /*진료DB(의과_보건기관) - 진료내역(30t)*/
 
-LIBNAME REX_T140 "D:\ǥ����ȣƮDB\04.�󺴳���_T140_S"; RUN; /*����DB(�ǰ�_���Ǳ��) - �󺴳���(40t)*/
+LIBNAME REX_T140 "D:\표본코호트DB\04.상병내역_T140_S"; RUN; /*진료DB(의과_보건기관) - 상병내역(40t)*/
 
-LIBNAME REX_T160 "D:\ǥ����ȣƮDB\05.ó��������_T160_S"; RUN; /*����DB(�ǰ�_���Ǳ��) - ó�������λ󼼳���(60t)*/
+LIBNAME REX_T160 "D:\표본코호트DB\05.처방전교부_T160_S"; RUN; /*진료DB(의과_보건기관) - 처방전교부상세내역(60t)*/
 
-LIBNAME REX_T220 "D:\ǥ����ȣƮDB\06.T220"; RUN; /*����DB(ġ��_�ѹ�) - ������(20t)*/
+LIBNAME REX_T220 "D:\표본코호트DB\06.T220"; RUN; /*진료DB(치과_한방) - 명세서(20t)*/
 
-LIBNAME REX_T230 "D:\ǥ����ȣƮDB\07.���᳻��_T230_S"; RUN; /*����DB(ġ��_�ѹ�) - ���᳻��(30t)*/
+LIBNAME REX_T230 "D:\표본코호트DB\07.진료내역_T230_S"; RUN; /*진료DB(치과_한방) - 진료내역(30t)*/
 
-LIBNAME REX_T240 "D:\ǥ����ȣƮDB\08.�󺴳���_T240_S"; RUN; /*����DB(ġ��_�ѹ�) - �󺴳���(40t)*/
+LIBNAME REX_T240 "D:\표본코호트DB\08.상병내역_T240_S"; RUN; /*진료DB(치과_한방) - 상병내역(40t)*/
 
-LIBNAME REX_T260 "D:\ǥ����ȣƮDB\09.ó��������_T260_S"; RUN; /*����DB(ġ��_�ѹ�) - ó�������λ󼼳���(60t)*/
+LIBNAME REX_T260 "D:\표본코호트DB\09.처방전교부_T260_S"; RUN; /*진료DB(치과_한방) - 처방전교부상세내역(60t)*/
 
-LIBNAME REX_T320 "D:\ǥ����ȣƮDB\10.T320"; RUN; /*����DB(�౹) - ������(20t)*/
+LIBNAME REX_T320 "D:\표본코호트DB\10.T320"; RUN; /*진료DB(약국) - 명세서(20t)*/
 
-LIBNAME REX_T330 "D:\ǥ����ȣƮDB\11.���᳻��_T330_S"; RUN; /*����DB(�౹) - ���᳻��(30t)*/
+LIBNAME REX_T330 "D:\표본코호트DB\11.진료내역_T330_S"; RUN; /*진료DB(약국) - 진료내역(30t)*/
 
-LIBNAME REX_gj "D:\ǥ����ȣƮDB\12.gj"; RUN; /*�ǰ�����DB*/
+LIBNAME REX_gj "D:\표본코호트DB\12.gj"; RUN; /*건강검진DB*/
 
-LIBNAME REX_yk "D:\ǥ����ȣƮDB\13.�����_S"; RUN; /*�����DB*/
+LIBNAME REX_yk "D:\표본코호트DB\13.요양기관_S"; RUN; /*요양기관DB*/
 
 /*-------------------------------------------------------------------
-- MACRO ����
-- ��簳������(YYYYMMDD) �������� ���� �����ͼ����� �и�
+- MACRO 생성
+- 요양개시일자(YYYYMMDD) 기준으로 월별 데이터셋으로 분리
 --------------------------------------------------------------------*/
+/*진료DB*/
 %MACRO TEST2(YEAR,LIB,TABLE); 
 %DO I=&YEAR. %TO 2013;
 	DATA &LIB..&TABLE._&I.;
@@ -52,36 +53,60 @@ LIBNAME REX_yk "D:\ǥ����ȣƮDB\13.�����_S"; RUN; /*�����DB*/
 %END;
 %MEND;
 
+/*건강검진DB*/
+%MACRO TEST3(start, stop, LIB, TABLE); 
+%do i=&start. %to &stop.;
+	DATA &LIB..&TABLE._&I.;
+	SET &LIB..&TABLE._&I.;
+	RECU_FR_DT_m = RAND("integer",1,12);
+	OUTPUT;
+	RUN;
+	QUIT;
+%END;
+
+%do i=&start. %to &stop.;
+	%DO P=1 %TO 12;
+		PROC SQL;
+		CREATE TABLE &LIB..&TABLE._&I._&P. AS
+		SELECT *
+		FROM &LIB..&TABLE._&I.
+		WHERE RECU_FR_DT_M=&P.;
+		;
+		QUIT;
+	%END;
+%END;
+%MEND;
+
 /*-------------------------------------------------------------------
-- MACRO ����
+- MACRO 실행
 --------------------------------------------------------------------*/
 
 /*20t*/
-%TEST2(2002, REX_T120, nhid_gy20_t1); /*�ǰ�_���Ǳ��*/
-%TEST2(2002, REX_T220, nhid_gy20_t2); /*ġ��_�ѹ�*/
-%TEST2(2002, REX_T320, nhid_gy20_t3); /*�౹*/
+%TEST2(2002, REX_T120, nhid_gy20_t1); /*의과_보건기관*/
+%TEST2(2002, REX_T220, nhid_gy20_t2); /*치과_한방*/
+%TEST2(2002, REX_T320, nhid_gy20_t3); /*약국*/
 
 /*30t*/
-%TEST2(2002, REX_T130, nhid_gy30_t1); /*�ǰ�_���Ǳ��*/
-%TEST2(2002, REX_T230, nhid_gy30_t2); /*ġ��_�ѹ�*/
-%TEST2(2002, REX_T330, nhid_gy30_t3); /*�౹*/
+%TEST2(2002, REX_T130, nhid_gy30_t1); /*의과_보건기관*/
+%TEST2(2002, REX_T230, nhid_gy30_t2); /*치과_한방*/
+%TEST2(2002, REX_T330, nhid_gy30_t3); /*약국*/
 
 /*40t*/
-%TEST2(2002, REX_T140, nhid_gy40_t1); /*�ǰ�_���Ǳ��*/
-%TEST2(2002, REX_T240, nhid_gy40_t2); /*ġ��_�ѹ�*/
+%TEST2(2002, REX_T140, nhid_gy40_t1); /*의과_보건기관*/
+%TEST2(2002, REX_T240, nhid_gy40_t2); /*치과_한방*/
 
 /*60t*/
-%TEST2(2002, REX_T160, nhid_gy60_t1); /*�ǰ�_���Ǳ��*/
-%TEST2(2002, REX_T260, nhid_gy60_t2); /*ġ��_�ѹ�*/
+%TEST2(2002, REX_T160, nhid_gy60_t1); /*의과_보건기관*/
+%TEST2(2002, REX_T260, nhid_gy60_t2); /*치과_한방*/
 
-/*�ǰ�����DB*/
-%TEST2(2002, REX_gj, nhid_gy30_t1);
+/*건강검진DB*/
+%TEST3(2002, REX_gj, nhid_gy30_t1);
 
 /*-------------------------------------------------------------------
-- rename ���� �ҷ�����;
-- ����!! ���������� ���������� �����߻�, �������� �����Ŀ� �����Ź�帳�ϴ�!!
+- rename 파일 불러오기;
+- 참고!! 엑셀파일이 열려있으면 에러발생, 엑셀파일 종류후에 실행부탁드립니다!!
 -------------------------------------------------------------------*/
-filename reffile 'D:\ǥ����ȣƮDB\rename_file.xlsx';
+filename reffile 'D:\표본코호트DB\rename_file.xlsx';
 
 PROC IMPORT OUT=name_list 
 DATAFILE=reffile
@@ -91,7 +116,7 @@ getnames=yes;
 run;
 
 /*-------------------------------------------------------------------
-- macro variable ����;
+- macro variable 생성;
 -------------------------------------------------------------------*/
 proc sql;
 select catx("=" , name, new_name)
@@ -102,7 +127,7 @@ quit;
 %put &=list_rename.;
 
 /*-------------------------------------------------------------------
-- �ڰ�DB �ڵ� �ڵ�;
+- 자격DB 자동 코드;
 -------------------------------------------------------------------*/
 %macro jkmacro_y (start, stop, lib, table);
 	%do i=&start. %to &stop.;
@@ -123,11 +148,11 @@ quit;
 	%END;
 %mend;
 
-/*MACRO ����*/
+/*MACRO 실행*/
 %jkmacro_y(2002,2013,REX_jk,nhid_jk);
 
 /*-------------------------------------------------------------------
-- ����DB_T20 �ڵ� �ڵ�;
+- 진료DB_T20 자동 코드;
 -------------------------------------------------------------------*/
 %macro T20macro_m(start, stop, lib, table);
 %do i=&start. %to &stop.;
@@ -149,13 +174,13 @@ quit;
 %END;
 %mend;
 
-/*MACRO ����*/
-%T20macro_m(2002,2013,REX_T120,NHID_GY20_T1); /*�ǰ�_���Ǳ��*/
-%T20macro_m(2002,2013,REX_T220,NHID_GY20_T2); /*ġ��_�ѹ�*/
-%T20macro_m(2002,2013,REX_T320,NHID_GY20_T3); /*�౹*/
+/*MACRO 실행*/
+%T20macro_m(2002,2013,REX_T120,NHID_GY20_T1); /*의과_보건기관*/
+%T20macro_m(2002,2013,REX_T220,NHID_GY20_T2); /*치과_한방*/
+%T20macro_m(2002,2013,REX_T320,NHID_GY20_T3); /*약국*/
 
 /*-------------------------------------------------------------------
-- ����DB_T30 �ڵ� �ڵ�;
+- 진료DB_T30 자동 코드;
 -------------------------------------------------------------------*/
 %macro T30macro_m(start, stop, lib, table);
 %do i=&start. %to &stop.;
@@ -177,13 +202,13 @@ quit;
 %END;
 %mend;
 
-/*MACRO ����*/
-%T30macro_m(2002,2013,REX_T130,NHID_GY30_T1); /*�ǰ�_���Ǳ��*/
-%T30macro_m(2002,2013,REX_T230,NHID_GY30_T2); /*ġ��_�ѹ�*/
-%T30macro_m(2002,2013,REX_T330,NHID_GY30_T3); /*�౹*/
+/*MACRO 실행*/
+%T30macro_m(2002,2013,REX_T130,NHID_GY30_T1); /*의과_보건기관*/
+%T30macro_m(2002,2013,REX_T230,NHID_GY30_T2); /*치과_한방*/
+%T30macro_m(2002,2013,REX_T330,NHID_GY30_T3); /*약국*/
 
 /*-------------------------------------------------------------------
-- ����DB_T40 �ڵ� �ڵ�;
+- 진료DB_T40 자동 코드;
 -------------------------------------------------------------------*/
 %macro T40macro_m(start, stop, lib, table);
 %do i=&start. %to &stop.;
@@ -205,12 +230,12 @@ quit;
 %END;
 %mend;
 
-/*MACRO ����*/
-%T40macro_m(2002,2013,REX_T140,NHID_GY40_T1); /*�ǰ�_���Ǳ��*/
-%T40macro_m(2002,2013,REX_T240,NHID_GY40_T2); /*ġ��_�ѹ�*/
+/*MACRO 실행*/
+%T40macro_m(2002,2013,REX_T140,NHID_GY40_T1); /*의과_보건기관*/
+%T40macro_m(2002,2013,REX_T240,NHID_GY40_T2); /*치과_한방*/
 
 /*-------------------------------------------------------------------
-- ����DB_T60 �ڵ� �ڵ�;
+- 진료DB_T60 자동 코드;
 -------------------------------------------------------------------*/
 %macro T60macro_m(start, stop, lib, table);
 %do i=&start. %to &stop.;
@@ -232,12 +257,12 @@ quit;
 %END;
 %mend;
 
-/*MACRO ����*/
-%T60macro_m(2002,2013,REX_T160,NHID_GY60_T1); /*�ǰ�_���Ǳ��*/
-%T60macro_m(2002,2013,REX_T260,NHID_GY60_T2); /*ġ��_�ѹ�*/
+/*MACRO 실행*/
+%T60macro_m(2002,2013,REX_T160,NHID_GY60_T1); /*의과_보건기관*/
+%T60macro_m(2002,2013,REX_T260,NHID_GY60_T2); /*치과_한방*/
 
 /*-------------------------------------------------------------------
-- �ǰ�����DB(2002~2008) �ڵ� �ڵ�;
+- 건강검진DB(2002~2008) 자동 코드;
 -------------------------------------------------------------------*/
 %macro gjmacro_m1(start, stop, lib, table);
 	%do i=&start. %to &stop.;
@@ -353,11 +378,11 @@ quit;
 	%END;
 %mend;
 
-/*MACRO ����*/
+/*MACRO 실행*/
 %gjmacro_m1(2002,2008,REX_gj,nhid_gj);
 
 /*-------------------------------------------------------------------
-- �ǰ�����DB(2009~2013) �ڵ� �ڵ�;
+- 건강검진DB(2009~2013) 자동 코드;
 -------------------------------------------------------------------*/
 %macro gjmacro_m2(start, stop, lib, table);
 	%do i=&start. %to &stop.;
@@ -462,11 +487,11 @@ quit;
 	%END;
 %mend;
 
-/*MACRO ����*/
+/*MACRO 실행*/
 %gjmacro_m2(2009,2013,REX_gj,nhid_gj);
 
 /*-------------------------------------------------------------------
-- �����DB �ڵ� �ڵ�;
+- 요양기관DB 자동 코드;
 -------------------------------------------------------------------*/
 %macro ykmacro_y(start, stop, lib, table);
 	%do i=&start. %to &stop.;
@@ -505,5 +530,5 @@ quit;
 	%end;
 %mend;
 
-/*MACRO ����*/
+/*MACRO 실행*/
 %ykmacro_y(2002,2013,REX_yk,NHID_YK);
